@@ -36,7 +36,7 @@ class DatabaseService {
   }
 
   getQuizData() async {
-    return await FirebaseFirestore.instance.collection("Quiz").snapshots();
+    return FirebaseFirestore.instance.collection("Quiz").snapshots();
   }
 
   getQuizDataToPlay(String quizId) async {

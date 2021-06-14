@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "669479901881-58gh87bsis7cpjhn71qrenune0ut5s4u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quiz_maker_app",
+            "certificate_hash": "d66da814770353fcf6fb5eb08ac7e47f13655730"
+          }
+        },
+        {
           "client_id": "669479901881-1e2bkju6e4tk7oa5b453gnqq1bmn1arq.apps.googleusercontent.com",
           "client_type": 3
         }

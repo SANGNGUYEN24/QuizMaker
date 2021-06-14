@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/add_question.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -14,9 +15,30 @@ class CreateQuiz extends StatefulWidget {
 class _CreateQuizState extends State<CreateQuiz> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String quizId, quizImageUrl, quizTitle, quizDescription;
-  DatabaseService databaseService = new DatabaseService();
 
+  // Get User id
+  String userID = AuthService().getUserID();
   bool _isLoading = false;
+
+  DatabaseService databaseService = new DatabaseService();
+  final _imageUrlController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrlController.addListener(() => setState(() {}));
+    _titleController.addListener(() => setState(() {}));
+    _descController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose(){
+    _imageUrlController.dispose();
+    _titleController.dispose();
+    _descController.dispose();
+  }
 
   CreateAQuiz() async {
     if (_formKey.currentState.validate()) {
@@ -25,6 +47,7 @@ class _CreateQuizState extends State<CreateQuiz> {
       });
       quizId = randomAlphaNumeric(16); // create a random Id
       Map<String, String> quizMap = {
+        "userId": userID,
         "quizId": quizId,
         "quizImageUrl": quizImageUrl,
         "quizTitle": quizTitle,
@@ -65,9 +88,22 @@ class _CreateQuizState extends State<CreateQuiz> {
                 child: Column(
                   children: [
                     TextFormField(
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
+                      controller: _imageUrlController,
                       validator: (val) =>
                           val.isEmpty ? "Enter Image URL" : null,
                       decoration: InputDecoration(
+                        suffixIcon: _imageUrlController.text.isEmpty
+                            ? Container(
+                                width: 0,
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.close_rounded),
+                                onPressed: () {
+                                  _imageUrlController.clear();
+                                },
+                              ),
                         hintText: "Quiz image URL",
                       ),
                       onChanged: (val) {
@@ -79,10 +115,22 @@ class _CreateQuizState extends State<CreateQuiz> {
                       height: 6,
                     ),
                     TextFormField(
+                      textInputAction: TextInputAction.next,
+                      controller: _titleController,
                       validator: (val) =>
                           val.isEmpty ? "Quiz title must not empty" : null,
                       decoration: InputDecoration(
                         hintText: "Quiz title",
+                        suffixIcon: _titleController.text.isEmpty
+                            ? Container(
+                                width: 0,
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.close_rounded),
+                                onPressed: () {
+                                  _titleController.clear();
+                                },
+                              ),
                       ),
                       onChanged: (val) {
                         // TODO: add quiz image URL
@@ -93,11 +141,22 @@ class _CreateQuizState extends State<CreateQuiz> {
                       height: 6,
                     ),
                     TextFormField(
+                      controller: _descController,
                       validator: (val) => val.isEmpty
                           ? "Quiz description must not empty"
                           : null,
                       decoration: InputDecoration(
                         hintText: "Quiz description",
+                        suffixIcon: _descController.text.isEmpty
+                            ? Container(
+                                width: 0,
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.close_rounded),
+                                onPressed: () {
+                                  _descController.clear();
+                                },
+                              ),
                       ),
                       onChanged: (val) {
                         // TODO: add quiz image URL
@@ -112,9 +171,8 @@ class _CreateQuizState extends State<CreateQuiz> {
                           CreateAQuiz();
                           //AddQuestion(quizId);
                         },
-                        child: blueButton(
-                            context: context,
-                            label: "Create quiz")),
+                        child:
+                            blueButton(context: context, label: "Create quiz")),
                   ],
                 ),
               ),

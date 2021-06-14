@@ -30,6 +30,7 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         _isLoggedIn = value;
       });
+      print("------------------------$_isLoggedIn");
     });
   }
 

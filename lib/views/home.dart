@@ -1,9 +1,12 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/helper/functions.dart';
+import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/create_quiz.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
+import 'package:quiz_maker_app/views/signin.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class Home extends StatefulWidget {
@@ -15,6 +18,9 @@ class _HomeState extends State<Home> {
   Stream quizStream;
   DatabaseService databaseService = new DatabaseService();
 
+  FirebaseAuth _user = FirebaseAuth.instance;
+  final String _userID = AuthService().getUserID();
+
   Widget quizList() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24),
@@ -22,18 +28,29 @@ class _HomeState extends State<Home> {
         stream: quizStream,
         builder: (context, snapshot) {
           return snapshot.data == null
-              ? Container()
+              ? Container(
+                  child: Center(
+                    child: Text(
+                      "You have no quiz here\n  Let's add a new one",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                )
               : ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
-                    return QuizCard(
-                        imageUrl:
-                            // snapshot.data.documents[index].data["quizImageUrl"]
-                            snapshot.data.docs[index]["quizImageUrl"],
-                        title: snapshot.data.docs[index]["quizTitle"],
-                        description: snapshot
-                            .data.docs[index]["quizDescription"],
-                    quizId: snapshot.data.docs[index]["quizId"],);
+                    return /*snapshot.data.docs[index]["userId"] == _userID?*/ QuizCard(
+                      userID: snapshot.data.docs[index]["userId"],
+                      imageUrl:
+                          // snapshot.data.documents[index].data["quizImageUrl"]
+                          snapshot.data.docs[index]["quizImageUrl"],
+                      title: snapshot.data.docs[index]["quizTitle"],
+                      description: snapshot.data.docs[index]["quizDescription"],
+                      quizId: snapshot.data.docs[index]["quizId"],
+                    );
                   },
                 );
         },
@@ -51,6 +68,27 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  confirmSignOut() {
+    final snackBar = SnackBar(
+      elevation: 2.0,
+      behavior: SnackBarBehavior.floating,
+      content: Text("Sign out?"),
+      action: SnackBarAction(
+        label: "Sign out",
+        onPressed: () {
+          _user.signOut();
+          HelperFunctions.saveUserLoggedInDetail(isLoggedIn: false);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => SignIn()));
+        },
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +98,17 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         brightness: Brightness.light,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              confirmSignOut();
+            },
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
       body: quizList(),
       floatingActionButton: FloatingActionButton(
@@ -77,15 +126,15 @@ class _HomeState extends State<Home> {
 
 class QuizCard extends StatelessWidget {
   //add uid for each quiz
-  //final String uid;
+  final String userID;
   final String imageUrl;
   final String title;
   final String description;
   final String quizId;
 
   QuizCard(
-      {//@required this.uid,
-        @required this.imageUrl,
+      {@required this.userID,
+      @required this.imageUrl,
       @required this.title,
       @required this.description,
       @required this.quizId});
@@ -95,7 +144,11 @@ class QuizCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayQuiz(quizId: quizId,)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => PlayQuiz(
+                      quizId: quizId,
+                    )));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
