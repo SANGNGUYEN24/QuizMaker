@@ -28,11 +28,30 @@ class _State extends State<SignIn> {
 
   void showSnackBarLoading() {
     final snackBar = SnackBar(
+      duration: Duration(seconds: 2),
       behavior: SnackBarBehavior.fixed,
       content: Container(
-        height: 40,
-        child: Center(
-          child: CircularProgressIndicator(),
+        height: 30,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                color: Colors.blue,
+                backgroundColor: Colors.white,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Loading...",
+              style: TextStyle(fontSize: 16),
+            )
+          ],
         ),
       ),
     );
@@ -44,6 +63,7 @@ class _State extends State<SignIn> {
 
   void showSnackBarMessage(String mess) {
     final snackBar = SnackBar(
+      duration: Duration(seconds: 2),
       behavior: SnackBarBehavior.fixed,
       content: Row(
         children: [
@@ -313,7 +333,7 @@ class _State extends State<SignIn> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Don't have an account?",
+                                "Don't have an account? ",
                                 style: TextStyle(fontSize: 15),
                               ),
                               GestureDetector(
@@ -324,7 +344,7 @@ class _State extends State<SignIn> {
                                           builder: (context) => SignUp()));
                                 },
                                 child: Text(
-                                  " Sign up",
+                                  "Sign up",
                                   style: TextStyle(
                                     fontSize: 15,
                                     decoration: TextDecoration.underline,

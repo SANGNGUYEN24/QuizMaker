@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
+import 'package:quiz_maker_app/styles/images.dart';
 import 'package:quiz_maker_app/views/create_quiz.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
 import 'package:quiz_maker_app/views/signin.dart';
@@ -15,58 +18,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Stream quizStream;
   DatabaseService databaseService = new DatabaseService();
 
   FirebaseAuth _user = FirebaseAuth.instance;
   final String _userID = AuthService().getUserID();
-
-  Widget quizList() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24),
-      child: StreamBuilder(
-        stream: quizStream,
-        builder: (context, snapshot) {
-          return snapshot.data == null
-              ? Container(
-                  child: Center(
-                    child: Text(
-                      "You have no quiz here\n  Let's add a new one",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (context, index) {
-                    return /*snapshot.data.docs[index]["userId"] == _userID?*/ QuizCard(
-                      userID: snapshot.data.docs[index]["userId"],
-                      imageUrl:
-                          // snapshot.data.documents[index].data["quizImageUrl"]
-                          snapshot.data.docs[index]["quizImageUrl"],
-                      title: snapshot.data.docs[index]["quizTitle"],
-                      description: snapshot.data.docs[index]["quizDescription"],
-                      quizId: snapshot.data.docs[index]["quizId"],
-                    );
-                  },
-                );
-        },
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    databaseService.getQuizData().then((val) {
-      setState(() {
-        quizStream = val;
-      });
-    });
-    super.initState();
-  }
 
   confirmSignOut() {
     final snackBar = SnackBar(
@@ -88,6 +43,56 @@ class _HomeState extends State<Home> {
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+
+  Widget quizList() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("Quiz")
+            .doc(_userID)
+            .collection("User quiz data")
+            .snapshots(),
+        builder: (context, snapshot) {
+          return (snapshot.data == null)
+              ? Center(child: CircularProgressIndicator())
+              : ((snapshot.data.docs.length <= 0)
+                  ? Container(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(emptyImageQuizList, height: 100,),
+                            SizedBox(height: 10,),
+                            Text(
+                              "Quizzes you add appear here",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (context, index) {
+                        return QuizCard(
+                          userID: snapshot.data.docs[index]["userId"],
+                          imageUrl: snapshot.data.docs[index]["quizImageUrl"],
+                          title: snapshot.data.docs[index]["quizTitle"],
+                          description: snapshot.data.docs[index]
+                              ["quizDescription"],
+                          quizId: snapshot.data.docs[index]["quizId"],
+                        );
+                      },
+                    ));
+        },
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +117,7 @@ class _HomeState extends State<Home> {
       ),
       body: quizList(),
       floatingActionButton: FloatingActionButton(
+        tooltip: "Add a new quiz",
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
@@ -151,22 +157,22 @@ class QuizCard extends StatelessWidget {
                     )));
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 8),
+        margin: EdgeInsets.only(bottom: 16),
         height: 150,
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(6.0),
+              borderRadius: BorderRadius.circular(9.0),
               child: Image.network(
                 imageUrl,
-                width: MediaQuery.of(context).size.width - 48,
+                width: MediaQuery.of(context).size.width,
                 fit: BoxFit.cover,
               ),
             ),
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.0),
-                color: Colors.black38,
+                borderRadius: BorderRadius.circular(9.0),
+                color: Colors.black26,
               ),
               alignment: Alignment.center,
               child: Column(

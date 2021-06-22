@@ -35,6 +35,8 @@ dependencies:
   font_awesome_flutter: ^9.1.0
   # Sign in with Google
   google_sign_in: ^5.0.4
+  # Display svg images
+  flutter_svg: ^0.22.0
 
 
   # The following adds the Cupertino Icons font to your application.

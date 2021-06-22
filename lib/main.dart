@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/views/home.dart';
 import 'package:quiz_maker_app/views/signin.dart';
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState(){
     checkUserLoggedInStatus();
-    //TODO implement inittial State
+    //TODO implement initial State
     super.initState();
   }
 
@@ -37,6 +38,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,

@@ -82,6 +82,7 @@ class _PlayQuizState extends State<PlayQuiz> {
             children: [
               questionSnapshot == null
                   ? Container(
+                height: MediaQuery.of(context).size.height,
                       child: Center(
                         child: CircularProgressIndicator(),
                       ),

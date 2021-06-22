@@ -34,6 +34,7 @@ class _CreateQuizState extends State<CreateQuiz> {
   }
 
   @override
+  // ignore: must_call_super
   void dispose(){
     _imageUrlController.dispose();
     _titleController.dispose();
@@ -54,13 +55,17 @@ class _CreateQuizState extends State<CreateQuiz> {
         "quizDescription": quizDescription
       };
 
+      // Map<String, String> userIdMap = {
+      //   "userID": userID,
+      // };
+
       await databaseService.addQuizData(quizMap, quizId).then((value) => {
-            setState(() {
-              _isLoading = false;
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => AddQuestion(quizId)));
-            })
-          });
+        setState(() {
+          _isLoading = false;
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => AddQuestion(userID, quizId)));
+        })
+      });
     }
   }
 

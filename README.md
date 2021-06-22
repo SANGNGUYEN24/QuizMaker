@@ -1,10 +1,15 @@
 # QuizMaker app using Flutter vs Firebase
-## Version 0
+## Version 0.1
 
-Firebase authentication: Email and Google account
+###update: 
 
-Firestore to store and get the quiz data
+Data: Big achievement -> Each user has own their data in a separate document in Firestore
 
-Firebase account: nguyendinhsang102@gmail.com
+UI: - Custom snackBar and Circular icon for loading
+    - Custom ListView 
+    - Empty list message: Quizzes you add appear here
+    
+Bug: - Fixed check snapshot.data == null
+     - Fixed get each quiz question in a subcollection (Firestore)
 
-## Commit date: 14/06/2021
+## Commit date: 22/06/2021

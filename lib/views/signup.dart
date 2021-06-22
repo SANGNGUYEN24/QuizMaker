@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/models/user.dart';
 import 'package:quiz_maker_app/services/auth.dart';
+import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/signin.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:email_validator/email_validator.dart';
@@ -17,7 +18,8 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   AuthService authService = new AuthService();
-  String name = "";
+  DatabaseService databaseService = DatabaseService();
+  String userName = "";
   String email = "";
   String password = "";
   String error = "";
@@ -27,11 +29,30 @@ class _SignUpState extends State<SignUp> {
 
   void showSnackBarLoading() {
     final snackBar = SnackBar(
+      duration: Duration(seconds: 2),
       behavior: SnackBarBehavior.fixed,
       content: Container(
-        height: 40,
-        child: Center(
-          child: CircularProgressIndicator(),
+        height: 30,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                color: Colors.blue,
+                backgroundColor: Colors.white,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Loading...",
+              style: TextStyle(fontSize: 16),
+            )
+          ],
         ),
       ),
     );
@@ -43,6 +64,7 @@ class _SignUpState extends State<SignUp> {
 
   void showSnackBarMessage(String mess) {
     final snackBar = SnackBar(
+      duration: Duration(seconds: 2),
       behavior: SnackBarBehavior.fixed,
       content: Row(
         children: [
@@ -98,6 +120,7 @@ class _SignUpState extends State<SignUp> {
           _isLoading = false;
         });
         HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
+       await databaseService.addUserInfo(userName);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
       } else {
@@ -126,6 +149,7 @@ class _SignUpState extends State<SignUp> {
                 child: CircularProgressIndicator(),
               ))
             : SingleChildScrollView(
+                reverse: true,
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   alignment: Alignment.topCenter,
@@ -135,6 +159,7 @@ class _SignUpState extends State<SignUp> {
                       key: _formKey,
                       child: Column(
                         children: [
+                          Spacer(),
                           TextFormField(
                             validator: (val) {
                               return val.isEmpty ? "Enter name!" : null;
@@ -147,7 +172,7 @@ class _SignUpState extends State<SignUp> {
                               hintText: "Name",
                             ),
                             onChanged: (val) {
-                              name = val;
+                              userName = val;
                             },
                           ),
                           SizedBox(
@@ -201,20 +226,9 @@ class _SignUpState extends State<SignUp> {
                             onTap: () {
                               signUp();
                             },
-                            child:
-                                blueButton(context: context, label: "Sign up with your email"),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: Text('Sign up with Google', style: TextStyle(fontSize: 16),),
-                            style: OutlinedButton.styleFrom(
-                              minimumSize: Size(MediaQuery.of(context).size.width - 48,54),
-                              shape: StadiumBorder(),
-                              side: BorderSide(color: Colors.blue),
-                            ),
+                            child: blueButton(
+                                context: context,
+                                label: "Sign up with your email"),
                           ),
                           SizedBox(
                             height: 10,
@@ -223,7 +237,7 @@ class _SignUpState extends State<SignUp> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Already have an account?",
+                                "Already have an account? ",
                                 style: TextStyle(fontSize: 15),
                               ),
                               GestureDetector(
@@ -234,7 +248,7 @@ class _SignUpState extends State<SignUp> {
                                           builder: (context) => SignIn()));
                                 },
                                 child: Text(
-                                  " Sign in",
+                                  "Sign in",
                                   style: TextStyle(
                                     fontSize: 15,
                                     decoration: TextDecoration.underline,
