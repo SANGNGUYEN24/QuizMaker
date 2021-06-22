@@ -5,8 +5,8 @@
 
 Data: Big achievement -> Each user has own their data in a separate document in Firestore
 
-UI: - Custom snackBar and Circular icon for loading
-    - Custom ListView 
+UI: - Custom snackBar and Circular icon for loading\n
+    - Custom ListView
     - Empty list message: Quizzes you add appear here
     
 Bug: - Fixed check snapshot.data == null
