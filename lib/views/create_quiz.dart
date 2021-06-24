@@ -41,7 +41,7 @@ class _CreateQuizState extends State<CreateQuiz> {
     _descController.dispose();
   }
 
-  CreateAQuiz() async {
+  createAQuiz() async {
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -54,10 +54,6 @@ class _CreateQuizState extends State<CreateQuiz> {
         "quizTitle": quizTitle,
         "quizDescription": quizDescription
       };
-
-      // Map<String, String> userIdMap = {
-      //   "userID": userID,
-      // };
 
       await databaseService.addQuizData(quizMap, quizId).then((value) => {
         setState(() {
@@ -173,7 +169,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          CreateAQuiz();
+                          createAQuiz();
                           //AddQuestion(quizId);
                         },
                         child:

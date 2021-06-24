@@ -140,6 +140,7 @@ class _AddQuestionState extends State<AddQuestion> {
                 SizedBox(height: 10,),
                 GestureDetector(
                   onTap: () {
+                    uploadQuestion();
                     Navigator.pop(context);
                   },
                   child: blueButton(
@@ -151,7 +152,6 @@ class _AddQuestionState extends State<AddQuestion> {
                         .width - 100,
                   ),
                 )
-
               ],
             ),
           ),

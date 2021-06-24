@@ -19,17 +19,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   DatabaseService databaseService = new DatabaseService();
-
   FirebaseAuth _user = FirebaseAuth.instance;
+
   final String _userID = AuthService().getUserID();
 
   confirmSignOut() {
     final snackBar = SnackBar(
       elevation: 2.0,
-      behavior: SnackBarBehavior.floating,
-      content: Text("Sign out?"),
+      behavior: SnackBarBehavior.fixed,
+      content: Text("Do you want to sign out?"),
       action: SnackBarAction(
-        label: "Sign out",
+        label: "SIGN OUT",
         onPressed: () {
           _user.signOut();
           HelperFunctions.saveUserLoggedInDetail(isLoggedIn: false);
@@ -62,8 +62,13 @@ class _HomeState extends State<Home> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(emptyImageQuizList, height: 100,),
-                            SizedBox(height: 10,),
+                            SvgPicture.asset(
+                              emptyImageQuizList,
+                              height: 100,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               "Quizzes you add appear here",
                               style: TextStyle(
@@ -92,7 +97,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +167,9 @@ class QuizCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(9.0),
-              child: Image.network(
-                imageUrl,
+              child: FadeInImage.assetNetwork(
+                placeholder: loadingImage,
+                image: imageUrl,
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.cover,
               ),
@@ -175,24 +180,33 @@ class QuizCard extends StatelessWidget {
                 color: Colors.black26,
               ),
               alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Text(
-                    description,
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(right: 30, left: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      description,
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
             )
           ],

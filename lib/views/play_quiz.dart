@@ -31,8 +31,7 @@ class _PlayQuizState extends State<PlayQuiz> {
 
     questionModel.question = questionSnapshot["question"];
     List<String> options = [
-      // TODO change the way to get data
-      questionSnapshot["option1"], //  questionSnapshot.data["option1"] -> questionSnapshot["option1"]
+      questionSnapshot["option1"],
       questionSnapshot["option2"],
       questionSnapshot["option3"],
       questionSnapshot["option4"],

@@ -38,7 +38,7 @@ class _OptionTileState extends State<OptionTile> {
               style: TextStyle(
                 color: widget.optionSelected == widget.description
                     ? widget.correctAnswer == widget.optionSelected
-                        ? Colors.green.withOpacity(0.7)
+                        ? Colors.green
                         : Colors.red
                     : Colors.black54,
               ),
@@ -47,11 +47,17 @@ class _OptionTileState extends State<OptionTile> {
           SizedBox(
             width: 8,
           ),
-          Text(
-            widget.description,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.black54,
+          Flexible(
+            child: Text(
+              widget.description,
+              style: TextStyle(
+                fontSize: 18,
+                color: widget.optionSelected == widget.description
+                    ? widget.correctAnswer == widget.optionSelected
+                    ? Colors.green
+                    : Colors.red
+                    : Colors.black54,
+              ),
             ),
           )
         ],

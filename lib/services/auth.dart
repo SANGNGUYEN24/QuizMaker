@@ -13,13 +13,13 @@ class AuthService {
   }
 
   // User object based on FirebaseUser
-  Userne _userFromFirebaseUser(User user) {
+  UserObject _userFromFirebaseUser(User user) {
     // ignore: unnecessary_null_comparison
-    return user != null ? Userne(uid: user.uid) : null;
+    return user != null ? UserObject(uid: user.uid) : null;
   }
 
   // auth change user stream
-  Stream<Userne> get user{
+  Stream<UserObject> get user{
     return _auth.authStateChanges()
         //map((FirebaseUser user) => _userFromFirebaseUser(user));
         .map(_userFromFirebaseUser); // 2 lines are the same

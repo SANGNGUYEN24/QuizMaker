@@ -1,23 +1,20 @@
 # QuizMaker app using Flutter vs Firebase
-## Version 0.1
+## Version 0.2
 
 ### Update:
 
 Data: 
     
-    Big achievement -> Each user has own their data in a separate document in Firestore
+    - Each user has own their data in database
+    - Auto update user Name when user sign in with Google account
+    - Fix little bugs when update and get user data
 
 UI:  
 
+    - Display a loading image and fade it to real image
     - Custom snackBar and Circular icon for loading
-
-    - Custom ListView
-    
+    - Custom ListView    
     - Empty list message: Quizzes you add appear here
-    
-Bug: 
+    - Fix overflow renderFlow when user type in long string, display ... if it overflow
 
-    - Fixed check snapshot.data == null
-    - Fixed get each quiz question in a subcollection (Firestore)
-
-## Commit date: 22/06/2021
+## Commit date: 24/06/2021

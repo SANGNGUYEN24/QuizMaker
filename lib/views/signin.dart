@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/models/user.dart';
+import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/home.dart';
 import 'package:quiz_maker_app/views/signup.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -16,19 +17,29 @@ class SignIn extends StatefulWidget {
 }
 
 class _State extends State<SignIn> {
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String email;
   String password;
-  bool _isLoading = false;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
+  DatabaseService databaseService = DatabaseService();
+
+  final _user = FirebaseAuth.instance.currentUser;
 
   // Google Sign in
   final googleSignIn = GoogleSignIn();
 
+  // User object based on FirebaseUser
+  UserObject _userFromFirebaseUser(User user) {
+    // ignore: unnecessary_null_comparison
+    return user != null ? UserObject(uid: user.uid) : null;
+  }
+
   void showSnackBarLoading() {
     final snackBar = SnackBar(
-      duration: Duration(seconds: 2),
+      duration: Duration(minutes: 10),
       behavior: SnackBarBehavior.fixed,
       content: Container(
         height: 30,
@@ -84,14 +95,8 @@ class _State extends State<SignIn> {
       ..showSnackBar(snackBar);
   }
 
-  // User object based on FirebaseUser
-  Userne _userFromFirebaseUser(User user) {
-    // ignore: unnecessary_null_comparison
-    return user != null ? Userne(uid: user.uid) : null;
-  }
-
-  // A dialog to reset password
-  fillYourEmail(BuildContext context) {
+  // A dialog requiring an email to reset password
+  fillEmailResetPasswordDialog(BuildContext context) {
     String email = "";
     return showDialog(
         context: context,
@@ -140,17 +145,14 @@ class _State extends State<SignIn> {
 
   /// Sign in functions //////////////////////////////////////////
 
-  /// Using user email
+  /// Using user email and password
   Future signInEmailAndPassword(String email, String password) async {
     try {
       UserCredential authResult = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+
       User firebaseUser = authResult.user;
 
-      // change value of _isLoading
-      setState(() {
-        _isLoading = true;
-      });
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
       if (e.code == 'wrong-password')
@@ -165,17 +167,20 @@ class _State extends State<SignIn> {
   }
 
   // Sign In function which call firebase function service
-  signIn() async {
+  signInEmailAndPass() async {
     if (_formKey.currentState.validate()) {
       showSnackBarLoading();
+
       dynamic result = await signInEmailAndPassword(email, password);
       if (result != null) {
-        setState(() {
-          _isLoading = false;
-        });
+        // update sign in status
         HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
+
+        // hide the snackBar after sign in done
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
       } else {
         showSnackBarMessage("Something wrong with your email or password");
         return null;
@@ -183,9 +188,10 @@ class _State extends State<SignIn> {
     }
   }
 
-  /// Sign In using Google
+  /// Sign In using Google account
   Future googleSignInFunction() async {
     showSnackBarLoading();
+
     try {
       final user = await googleSignIn.signIn();
       if (user == null) {
@@ -200,7 +206,12 @@ class _State extends State<SignIn> {
           HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
+
+          // Hide snackBar
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
         });
+        await databaseService.addUserInfo(_user.displayName);
       }
     } catch (e) {
       print(e.toString());
@@ -227,140 +238,134 @@ class _State extends State<SignIn> {
           centerTitle: true,
           title: appBar(context),
         ),
-        body: _isLoading
-            ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : SingleChildScrollView(
-                reverse: true,
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 50,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          Spacer(),
-                          TextFormField(
-                            validator: (email) {
-                              return !EmailValidator.validate(email)
-                                  ? "Enter a valid email!"
-                                  : null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              prefixIcon: Icon(Icons.mail),
-                              hintText: "Email",
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            autofillHints: [AutofillHints.email],
-                            onChanged: (val) {
-                              email = val;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            obscureText: true,
-                            validator: (val) {
-                              return val.isEmpty ? "Enter password!" : null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              prefixIcon: Icon(Icons.vpn_key),
-                              hintText: "Password",
-                            ),
-                            onChanged: (val) {
-                              password = val;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              fillYourEmail(context);
-                            },
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text("Forgot password?"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                signIn();
-                              },
-                              child: blueButton(
-                                  context: context,
-                                  label: "Sign in with your email")),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          OutlinedButton.icon(
-                            onPressed: () {
-                              googleSignInFunction();
-                            },
-                            icon: FaIcon(
-                              FontAwesomeIcons.google,
-                              color: Colors.redAccent,
-                            ),
-                            label: Text(
-                              'Sign in with Google',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              minimumSize: Size(
-                                  MediaQuery.of(context).size.width - 48, 54),
-                              shape: StadiumBorder(),
-                              side: BorderSide(color: Colors.blue),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Don't have an account? ",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignUp()));
-                                },
-                                child: Text(
-                                  "Sign up",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 100,
-                          ),
-                        ],
+        body: SingleChildScrollView(
+          reverse: true,
+          child: Container(
+            height: MediaQuery.of(context).size.height - 50,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Spacer(),
+                    TextFormField(
+                      validator: (email) {
+                        return !EmailValidator.validate(email)
+                            ? "Enter a valid email!"
+                            : null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.mail),
+                        hintText: "Email",
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: [AutofillHints.email],
+                      onChanged: (val) {
+                        email = val;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      validator: (val) {
+                        return val.isEmpty ? "Enter password!" : null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.vpn_key),
+                        hintText: "Password",
+                      ),
+                      onChanged: (val) {
+                        password = val;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        fillEmailResetPasswordDialog(context);
+                      },
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: Text("Forgot password?"),
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          signInEmailAndPass();
+                        },
+                        child: blueButton(
+                            context: context,
+                            label: "Sign in with your email")),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        googleSignInFunction();
+                      },
+                      icon: FaIcon(
+                        FontAwesomeIcons.google,
+                        color: Colors.redAccent,
+                      ),
+                      label: Text(
+                        'Sign in with Google',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize:
+                            Size(MediaQuery.of(context).size.width - 48, 54),
+                        shape: StadiumBorder(),
+                        side: BorderSide(color: Colors.blue),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUp()));
+                          },
+                          child: Text(
+                            "Sign up",
+                            style: TextStyle(
+                              fontSize: 15,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                  ],
                 ),
-              ));
+              ),
+            ),
+          ),
+        ));
   }
 }

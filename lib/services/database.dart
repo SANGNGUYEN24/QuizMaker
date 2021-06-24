@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'auth.dart';
-
 class DatabaseService {
 
   final String uid;
@@ -17,7 +15,7 @@ class DatabaseService {
   }
 
   Future<void> addUserInfo(String userName)async {
-    Map<String, String> userInfo ={
+    Map<String, String> userInfo = {
       "name" : userName
     };
     await FirebaseFirestore.instance
@@ -28,16 +26,12 @@ class DatabaseService {
 
   Future<void> addQuizData(
       Map quizData, String quizId) async {
-    // await FirebaseFirestore.instance
-    //     .collection("Quiz")
-    //     .doc(getUserID())
-    //     .set(userIdMap);
     await FirebaseFirestore.instance
         .collection("Quiz")
         .doc(getUserID())
         .collection("User quiz data")
-        .doc(quizId) // documents -> doc
-        .set(quizData) // setData -> set
+        .doc(quizId)
+        .set(quizData)
         .catchError((e) {
       print(e.toString());
     });
