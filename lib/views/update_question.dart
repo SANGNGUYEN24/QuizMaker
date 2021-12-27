@@ -4,10 +4,10 @@
 /// This file helps update question data of each quiz to the database
 ///=============================================================================
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/models/question.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/models/question.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 
 class UpdateQuestion extends StatefulWidget {
   final String userId;

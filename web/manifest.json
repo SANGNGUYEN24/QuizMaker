@@ -1,6 +1,6 @@
 {
-    "name": "quiz_maker_app",
-    "short_name": "quiz_maker_app",
+    "name": "justquizzes",
+    "short_name": "justquizzes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

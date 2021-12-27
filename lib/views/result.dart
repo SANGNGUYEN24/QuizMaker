@@ -4,8 +4,8 @@
 /// The file to show the result page after competing the quiz
 ///=============================================================================
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/play_quiz.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/play_quiz.dart';
 
 import 'home.dart';
 

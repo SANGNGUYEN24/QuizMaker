@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/shared_quiz/components/shared_quiz_card.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/shared_quiz/components/shared_quiz_card.dart';
 
 import 'components/shared_quiz_list.dart';
 
@@ -79,7 +79,7 @@ class _BodyState extends State<Body> {
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
-                  hintText: "Put quiz token here",
+                  hintText: "Put a quiz token here",
                   prefixIcon: Icon(Icons.search)),
             ),
           ),

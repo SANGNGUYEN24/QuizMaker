@@ -6,15 +6,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/models/question.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/result.dart';
-import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/models/question.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/result.dart';
+import 'package:justquizzes/widgets/quiz_play_widgets.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 
 import 'add_question.dart';
-import 'home.dart';
 
 class PlayQuiz extends StatefulWidget {
   final String userId;
@@ -101,65 +100,12 @@ class _PlayQuizState extends State<PlayQuiz> {
 
     return questionModel;
   }
-  // TODO edit quiz
-
-  Future<bool> _onBackPressed(BuildContext context) async {
-    return await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('You are doing quiz...'),
-            content: new Text('Going back cause progress losing'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (context) => Home()));
-                },
-                child: Text("GO HOME"),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50))),
-                onPressed: () => {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Results(
-                                correct: correct,
-                                incorrect: incorrect,
-                                notAttempted: notAttempted,
-                                total: total,
-                                userId: widget.userId,
-                                quizId: widget.quizId,
-                                quizTitle: quizTitle,
-                              )))
-                },
-                child: Text("SUMMIT"),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
 
   void _onSelected(BuildContext context) {
-    // switch (item) {
-    //   case 0:
-    //     break;
-    //
-    //   /// Add a question
-    //   case 1:
-    //     {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => AddQuestion(widget.userId, widget.quizId)));
-    // break;
-    // }
-    // }
   }
 
   /// The UI of the page
@@ -189,34 +135,6 @@ class _PlayQuizState extends State<PlayQuiz> {
               },
             ),
           ),
-          // PopupMenuButton<int>(
-          //     // onSelected: (item) => _onSelected(context, item),
-          //     itemBuilder: (context) => [
-          //           PopupMenuItem<int>(
-          //             value: 0,
-          //             child: Row(
-          //               children: [
-          //                 Icon(Icons.edit_rounded),
-          //                 SizedBox(
-          //                   width: 8,
-          //                 ),
-          //                 Text("Edit this quiz")
-          //               ],
-          //             ),
-          //           ),
-          //           PopupMenuItem<int>(
-          //             value: 1,
-          //             child: Row(
-          //               children: [
-          //                 Icon(Icons.add_rounded),
-          //                 SizedBox(
-          //                   width: 8,
-          //                 ),
-          //                 Text("Add a question for this quiz")
-          //               ],
-          //             ),
-          //           ),
-          //         ]),
         ],
       ),
       body: SingleChildScrollView(
@@ -425,14 +343,13 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("CANCEL"),
+                child: Text(
+                  "CANCEL",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50))),
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);
 
@@ -465,7 +382,10 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                   /// Show confirmation
                   showGoodMessage(context, "Update question successfully");
                 },
-                child: Text("UPDATE"),
+                child: Text(
+                  "UPDATE",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
@@ -561,49 +481,47 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(9.0),
-              highlightColor: Colors.transparent,
-              splashColor: Colors.black26,
-              radius: 1000.0,
-              onLongPress: () {
-                showBottomSheet(context);
-              },
-              child: Text(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(9.0),
+        radius: 1000.0,
+        onLongPress: () {
+          showBottomSheet(context);
+        },
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
                 style: TextStyle(
                     fontSize: 18,
                     color: Colors.black87,
                     fontWeight: FontWeight.bold),
               ),
-            ),
+              SizedBox(
+                height: 14,
+              ),
+              buildGestureDetector(widget.questionModel.option1, "A"),
+              SizedBox(
+                height: 4,
+              ),
+              buildGestureDetector(widget.questionModel.option2, "B"),
+              SizedBox(
+                height: 4,
+              ),
+              buildGestureDetector(widget.questionModel.option3, "C"),
+              SizedBox(
+                height: 4,
+              ),
+              buildGestureDetector(widget.questionModel.option4, "D"),
+              SizedBox(
+                height: 20,
+              )
+            ],
           ),
-          SizedBox(
-            height: 14,
-          ),
-          buildGestureDetector(widget.questionModel.option1, "A"),
-          SizedBox(
-            height: 4,
-          ),
-          buildGestureDetector(widget.questionModel.option2, "B"),
-          SizedBox(
-            height: 4,
-          ),
-          buildGestureDetector(widget.questionModel.option3, "C"),
-          SizedBox(
-            height: 4,
-          ),
-          buildGestureDetector(widget.questionModel.option4, "D"),
-          SizedBox(
-            height: 20,
-          )
-        ],
+        ),
       ),
     );
   }

@@ -4,7 +4,7 @@
 /// This file contains widgets that are used in many places in the application
 ///=============================================================================
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
+import 'package:justquizzes/styles/constants.dart';
 
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
@@ -26,11 +26,11 @@ Widget buildAppBarTitle(BuildContext context) {
       ),
       children: const <TextSpan>[
         TextSpan(
-            text: 'BK',
+            text: 'Just',
             style:
                 TextStyle(fontWeight: FontWeight.bold, color: kSecondaryColor)),
         TextSpan(
-            text: 'Quiz',
+            text: 'Quizzes',
             style:
                 TextStyle(fontWeight: FontWeight.bold, color: kPrimaryColor)),
       ],

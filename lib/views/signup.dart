@@ -7,12 +7,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:quiz_maker_app/helper/functions.dart';
-import 'package:quiz_maker_app/models/user.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/signin.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/helper/functions.dart';
+import 'package:justquizzes/models/user.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/signin.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 
 import 'home.dart';
 
@@ -138,8 +138,7 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     Spacer(),
-                    Image.asset("assets/foreground.png",
-                        width: 200, height: 200),
+                    Image.asset("assets/logo.png", width: 200, height: 200),
                     Spacer(),
 
                     /// Name text field

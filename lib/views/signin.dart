@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:quiz_maker_app/helper/functions.dart';
-import 'package:quiz_maker_app/models/user.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/home.dart';
-import 'package:quiz_maker_app/views/signup.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/helper/functions.dart';
+import 'package:justquizzes/models/user.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/home.dart';
+import 'package:justquizzes/views/signup.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -185,8 +185,7 @@ class _State extends State<SignIn> {
                 child: Column(
                   children: [
                     Spacer(),
-                    Image.asset("assets/foreground.png",
-                        width: 200, height: 200),
+                    Image.asset("assets/logo.png", width: 200, height: 200),
                     Spacer(),
 
                     /// Email text field

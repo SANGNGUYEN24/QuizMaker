@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:quiz_maker_app/models/quiz.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/shared_quiz/components/shared_quiz_card.dart';
+import 'package:justquizzes/models/quiz.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/shared_quiz/components/shared_quiz_card.dart';
 
 class SharedQuizList extends StatefulWidget {
   final String appUserId;

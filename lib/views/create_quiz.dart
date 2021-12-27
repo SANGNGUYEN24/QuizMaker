@@ -8,12 +8,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/add_question.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+
+import 'add_question.dart';
 
 class CreateQuiz extends StatefulWidget {
   const CreateQuiz({required Key? key}) : super(key: key);
@@ -29,8 +30,8 @@ class _CreateQuizState extends State<CreateQuiz> {
   final descController = TextEditingController();
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  bool _isListening1 = false;
-  bool _isListening2 = false;
+  bool _listeningTitle = false;
+  bool _listeningDesc = false;
   bool _tappedCreateQuizButton = false;
   var _localeId = '';
 // generate a random index based on the list length
@@ -111,15 +112,15 @@ class _CreateQuizState extends State<CreateQuiz> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         brightness: Brightness.light,
-        actions: <Widget>[
-          IconButton(
-            tooltip: "Upload a photo",
-            onPressed: () {},
-            icon: Icon(
-              Icons.upload_outlined,
-            ),
-          ),
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     tooltip: "Upload a photo",
+        //     onPressed: () {},
+        //     icon: Icon(
+        //       Icons.upload_outlined,
+        //     ),
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
@@ -147,14 +148,20 @@ class _CreateQuizState extends State<CreateQuiz> {
                     suffixIcon: titleController.text.isEmpty
                         ? IconButton(
                             onPressed: () => _listen("quizTitle"),
-                            icon: Icon(_isListening1
+                            icon: Icon(_listeningTitle
                                 ? Icons.mic
                                 : Icons.mic_none_rounded),
-                            color: _isListening1 ? Colors.red : kSecondaryColor,
+                            color:
+                                _listeningTitle ? Colors.red : kSecondaryColor,
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
-                            onPressed: () => titleController.clear(),
+                            onPressed: () {
+                              titleController.clear();
+                              quizTitle = "Preview title";
+                              _listeningTitle = false;
+                              setState(() {});
+                            },
                           ),
                   ),
                   // onChanged: (val) {
@@ -174,14 +181,20 @@ class _CreateQuizState extends State<CreateQuiz> {
                     suffixIcon: descController.text.isEmpty
                         ? IconButton(
                             onPressed: () => _listen("quizDesc"),
-                            icon: Icon(_isListening2
+                            icon: Icon(_listeningDesc
                                 ? Icons.mic
                                 : Icons.mic_none_rounded),
-                            color: _isListening2 ? Colors.red : kSecondaryColor,
+                            color:
+                                _listeningDesc ? Colors.red : kSecondaryColor,
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
-                            onPressed: () => descController.clear(),
+                            onPressed: () {
+                              descController.clear();
+                              quizDescription = "Preview description";
+                              _listeningDesc = false;
+                              setState(() {});
+                            },
                           ),
                   ),
                   // onChanged: (val) {
@@ -223,12 +236,12 @@ class _CreateQuizState extends State<CreateQuiz> {
         setState(() {
           _isListening = true;
           if (label == "quizTitle")
-            _isListening1 = true;
+            _listeningTitle = true;
           else
-            _isListening2 = true;
+            _listeningDesc = true;
         });
         var systemLocale = await _speech.systemLocale();
-        var s = _localeId = systemLocale!.localeId;
+        var _localeId = systemLocale!.localeId;
         _speech.listen(
           onResult: (val) => setState(() {
             if (label == "quizTitle")
@@ -247,9 +260,9 @@ class _CreateQuizState extends State<CreateQuiz> {
       setState(() {
         _isListening = false;
         if (label == "quizTitle")
-          _isListening1 = false;
+          _listeningTitle = false;
         else
-          _isListening2 = false;
+          _listeningDesc = false;
       });
       _speech.stop();
     }
@@ -280,8 +293,8 @@ class _PreviewQuizCardState extends State<PreviewQuizCard> {
   void initState() {
     super.initState();
     getRandomImageUrl();
-    _CreateQuizState.quizTitle = "Preview Title";
-    _CreateQuizState.quizDescription = "Preview Description";
+    _CreateQuizState.quizTitle = "Preview title";
+    _CreateQuizState.quizDescription = "Preview description";
     print("In preview quiz card: ${_CreateQuizState.quizImageUrl}");
   }
 

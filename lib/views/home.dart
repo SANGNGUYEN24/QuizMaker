@@ -9,14 +9,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:quiz_maker_app/helper/functions.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/create_quiz.dart';
-import 'package:quiz_maker_app/views/shared_quiz/shared_quiz.dart';
-import 'package:quiz_maker_app/views/signin.dart';
-import 'package:quiz_maker_app/widgets/quiz_card.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/helper/functions.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/signin.dart';
+import 'package:justquizzes/widgets/quiz_card.dart';
+import 'package:justquizzes/widgets/widgets.dart';
+
+import 'create_quiz.dart';
+import 'shared_quiz/shared_quiz.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -72,8 +73,8 @@ class _HomeState extends State<Home> {
     return await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-            title: new Text('Exit BKQuiz?'),
-            content: new Text('Goodbye, see you later'),
+            title: new Text('Do you want to exit?'),
+            content: new Text('See you later'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),

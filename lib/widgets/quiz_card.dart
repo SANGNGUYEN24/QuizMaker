@@ -5,10 +5,10 @@
 ///=============================================================================
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/play_quiz.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/views/play_quiz.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 import 'package:share/share.dart';
 
 /// The information of each quiz is got here and displayed as a clickable card
@@ -82,34 +82,38 @@ class QuizCard extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             title: Text("Rename quiz"),
-            content: Form(
-              child: Wrap(
-                children: [
-                  Text(
-                    "Title",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  TextFormField(
-                    initialValue: quizTitle,
-                    onChanged: (value) {
-                      newTitle = value;
-                    },
-                  ),
-                  Text("Description",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  TextFormField(
-                    onChanged: (value) {
-                      newDescription = value;
-                    },
-                    initialValue: quizDescription,
-                  )
-                ],
+            content: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              child: Form(
+                child: Wrap(
+                  children: [
+                    Text(
+                      "Title",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    TextFormField(
+                      initialValue: quizTitle,
+                      onChanged: (value) {
+                        newTitle = value;
+                      },
+                    ),
+                    Text("Description",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    TextFormField(
+                      onChanged: (value) {
+                        newDescription = value;
+                      },
+                      initialValue: quizDescription,
+                    )
+                  ],
+                ),
               ),
             ),
             actions: <Widget>[

@@ -4,9 +4,9 @@
 /// This file helps add question data of each quiz to the database
 ///=============================================================================
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:justquizzes/services/database.dart';
+import 'package:justquizzes/styles/constants.dart';
+import 'package:justquizzes/widgets/widgets.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class AddQuestion extends StatefulWidget {
@@ -30,11 +30,11 @@ class _AddQuestionState extends State<AddQuestion> {
   bool _isLoading = false;
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  bool _isListening1 = false;
-  bool _isListening2 = false;
-  bool _isListening3 = false;
-  bool _isListening4 = false;
-  bool _isListening5 = false;
+  bool _listeningQuestion = false;
+  bool _listeningOption1 = false;
+  bool _listeningOption2 = false;
+  bool _listeningOption3 = false;
+  bool _listeningOption4 = false;
   var _localeId = '';
 
   @override
@@ -215,16 +215,20 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: questionController.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('question'),
-                                    icon: Icon(_isListening1
+                                    icon: Icon(_listeningQuestion
                                         ? Icons.mic
                                         : Icons.mic_none_rounded),
-                                    color: _isListening1
+                                    color: _listeningQuestion
                                         ? Colors.red
                                         : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
-                                    onPressed: () => questionController.clear(),
+                                    onPressed: () {
+                                      questionController.clear();
+                                      _listeningQuestion = false;
+                                      setState(() {});
+                                    },
                                   ),
                           ),
                           onChanged: (val) {
@@ -245,16 +249,20 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option1Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option1'),
-                                    icon: Icon(_isListening2
+                                    icon: Icon(_listeningOption1
                                         ? Icons.mic
                                         : Icons.mic_none_rounded),
-                                    color: _isListening2
+                                    color: _listeningOption1
                                         ? Colors.red
                                         : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
-                                    onPressed: () => option1Controller.clear(),
+                                    onPressed: () {
+                                      option1Controller.clear();
+                                      _listeningOption1 = false;
+                                      setState(() {});
+                                    },
                                   ),
                           ),
                           onChanged: (val) {
@@ -275,16 +283,20 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option2Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option2'),
-                                    icon: Icon(_isListening3
+                                    icon: Icon(_listeningOption2
                                         ? Icons.mic
                                         : Icons.mic_none_rounded),
-                                    color: _isListening3
+                                    color: _listeningOption2
                                         ? Colors.red
                                         : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
-                                    onPressed: () => option2Controller.clear(),
+                                    onPressed: () {
+                                      option2Controller.clear();
+                                      _listeningOption2 = false;
+                                      setState(() {});
+                                    },
                                   ),
                           ),
                           onChanged: (val) {
@@ -305,16 +317,20 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option3Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option3'),
-                                    icon: Icon(_isListening4
+                                    icon: Icon(_listeningOption3
                                         ? Icons.mic
                                         : Icons.mic_none_rounded),
-                                    color: _isListening4
+                                    color: _listeningOption3
                                         ? Colors.red
                                         : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
-                                    onPressed: () => option3Controller.clear(),
+                                    onPressed: () {
+                                      option3Controller.clear();
+                                      _listeningOption3 = false;
+                                      setState(() {});
+                                    },
                                   ),
                           ),
                           onChanged: (val) {
@@ -335,16 +351,20 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option4Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option4'),
-                                    icon: Icon(_isListening5
+                                    icon: Icon(_listeningOption4
                                         ? Icons.mic
                                         : Icons.mic_none_rounded),
-                                    color: _isListening5
+                                    color: _listeningOption4
                                         ? Colors.red
                                         : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
-                                    onPressed: () => option4Controller.clear(),
+                                    onPressed: () {
+                                      option4Controller.clear();
+                                      _listeningOption4 = false;
+                                      setState(() {});
+                                    },
                                   ),
                           ),
                           onChanged: (val) {
@@ -358,6 +378,14 @@ class _AddQuestionState extends State<AddQuestion> {
                           onPressed: () {
                             uploadQuestion();
                             if (_formKey.currentState!.validate()) clearInput();
+                            setState(() {
+                              _isListening = false;
+                              _listeningQuestion = false;
+                              _listeningOption1 = false;
+                              _listeningOption2 = false;
+                              _listeningOption3 = false;
+                              _listeningOption4 = false;
+                            });
                           },
                           child: Text(
                             'Add question',
@@ -408,14 +436,14 @@ class _AddQuestionState extends State<AddQuestion> {
         setState(() {
           _isListening = true;
           if (label == "question")
-            _isListening1 = true;
+            _listeningQuestion = true;
           else if (label == "option1")
-            _isListening2 = true;
+            _listeningOption1 = true;
           else if (label == "option2")
-            _isListening3 = true;
+            _listeningOption2 = true;
           else if (label == "option3")
-            _isListening4 = true;
-          else if (label == "option4") _isListening5 = true;
+            _listeningOption3 = true;
+          else if (label == "option4") _listeningOption4 = true;
         });
         var systemLocale = await _speech.systemLocale();
         var s = _localeId = systemLocale!.localeId;
@@ -443,14 +471,14 @@ class _AddQuestionState extends State<AddQuestion> {
       setState(() {
         _isListening = false;
         if (label == "question")
-          _isListening1 = false;
+          _listeningQuestion = false;
         else if (label == "option1")
-          _isListening2 = false;
+          _listeningOption1 = false;
         else if (label == "option2")
-          _isListening3 = false;
+          _listeningOption2 = false;
         else if (label == "option3")
-          _isListening4 = false;
-        else if (label == "option4") _isListening5 = false;
+          _listeningOption3 = false;
+        else if (label == "option4") _listeningOption4 = false;
       });
       _speech.stop();
     }

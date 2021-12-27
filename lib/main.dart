@@ -6,10 +6,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:quiz_maker_app/helper/functions.dart';
-import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/views/home.dart';
-import 'package:quiz_maker_app/views/signin.dart';
+
+import 'helper/functions.dart';
+import 'styles/constants.dart';
+import 'views/home.dart';
+import 'views/signin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-      title: 'BKQuiz',
+      title: 'Just Quizzes',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: kSecondaryColor,
