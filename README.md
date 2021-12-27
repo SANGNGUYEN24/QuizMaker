@@ -5,7 +5,7 @@ This is an application for making quizzes, playing with them, sharing with your 
 
 ## Release
 
-- You can download the app [here](https://appdistribution.firebase.dev/i/83bec178745c2adf)
+- You can download the app [here](https://appdistribution.firebase.dev/i/4e8e662f20203b92)
 
 - Demo video [here](https://drive.google.com/file/d/1R8OTszvSRrlgqH4qDzqJaVcOS-cByaVq/view?usp=sharing)
 
