@@ -1,4 +1,4 @@
-package com.example.quiz_maker_app
+package com.gnas.justquizzes
 
 import io.flutter.embedding.android.FlutterActivity
 
