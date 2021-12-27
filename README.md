@@ -1,5 +1,5 @@
 # JustQuizzes
-<img src="/assets/foreground.png" width=64>
+<img src="/assets/logo.png" width=64>
 
 This is an application for making quizzes, playing with them, sharing with your friends!
 
