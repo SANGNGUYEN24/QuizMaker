@@ -66,12 +66,3 @@ This is an application for making quizzes, playing with them, sharing with your 
 
 
 [App wiki](https://github.com/SANGNGUYEN24/dev-fest-2021-final-project/wiki)
-
-## Team members
-
-- Nguyễn Đình Sáng
-- Nguyễn Việt Đức
-- Lê Thành Dinh
-- Nguyễn Quang Khánh
-
-**Metor: Vũ Tuấn Minh**
